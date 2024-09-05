@@ -2,7 +2,7 @@ package jp.seekengine.trainingjava.controller;
 
 import jp.seekengine.trainingjava.controller.request.MessageRequest;
 import jp.seekengine.trainingjava.controller.request.SampleRequest;
-import jp.seekengine.trainingjava.controller.response.GetCurrentDateTimeResponse;
+import jp.seekengine.trainingjava.controller.response.CurrentTimeResponse;
 import jp.seekengine.trainingjava.controller.response.SampleResponse;
 import jp.seekengine.trainingjava.domain.ScheduleService;
 import jp.seekengine.trainingjava.infrastructure.entity.MessageEntity;
@@ -45,8 +45,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/times/current")
-    public GetCurrentDateTimeResponse getCurrentDateTime() {
+    public CurrentTimeResponse getCurrentDateTime() {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
-        return new GetCurrentDateTimeResponse(formatter.format(OffsetDateTime.now()));
+        return new CurrentTimeResponse(formatter.format(OffsetDateTime.now()));
     }
 }
