@@ -3,7 +3,7 @@ package jp.seekengine.trainingjava.controller;
 import jp.seekengine.trainingjava.controller.request.ConvertTimesRequest;
 import jp.seekengine.trainingjava.controller.request.MessageRequest;
 import jp.seekengine.trainingjava.controller.request.SampleRequest;
-import jp.seekengine.trainingjava.controller.response.ConvertedTimesResponse;
+import jp.seekengine.trainingjava.controller.response.ConvertTimesResponse;
 import jp.seekengine.trainingjava.controller.response.SampleResponse;
 import jp.seekengine.trainingjava.domain.ScheduleService;
 import jp.seekengine.trainingjava.infrastructure.entity.MessageEntity;
@@ -46,7 +46,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/times/current/convert")
-    public ConvertedTimesResponse convertTimes(@RequestBody ConvertTimesRequest convertTimeRequest) {
+    public ConvertTimesResponse convertTimes(@RequestBody ConvertTimesRequest convertTimeRequest) {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
         List<String> convertedTime = convertTimeRequest.times().stream().map(it ->
                 OffsetDateTime.of(
@@ -60,6 +60,6 @@ public class ScheduleController {
                         ZoneOffset.ofHours(9)
                 ).format(formatter)).toList();
 
-        return new ConvertedTimesResponse(convertedTime);
+        return new ConvertTimesResponse(convertedTime);
     }
 }
