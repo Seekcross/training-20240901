@@ -2,8 +2,8 @@ package jp.seekengine.trainingjava.controller;
 
 import jp.seekengine.trainingjava.controller.request.MessageRequest;
 import jp.seekengine.trainingjava.controller.request.SampleRequest;
-import jp.seekengine.trainingjava.controller.request.yearMonthDateRequest;
-import jp.seekengine.trainingjava.controller.response.ConvertedTimeResponse;
+import jp.seekengine.trainingjava.controller.request.YearMonthDateRequest;
+import jp.seekengine.trainingjava.controller.response.ConvertTimeResponse;
 import jp.seekengine.trainingjava.controller.response.SampleResponse;
 import jp.seekengine.trainingjava.domain.ScheduleService;
 import jp.seekengine.trainingjava.infrastructure.entity.MessageEntity;
@@ -47,20 +47,20 @@ public class ScheduleController {
     }
 
     @GetMapping("/times/current/convert")
-    public ConvertedTimeResponse convertTime(@RequestBody yearMonthDateRequest convertTimeRequest) {
+    public ConvertTimeResponse convertTime(@RequestBody YearMonthDateRequest yearMonthDateRequest) {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
         String convertedTime = formatter.format(
                 OffsetDateTime.of(
-                    convertTimeRequest.year(),
-                    convertTimeRequest.month(),
-                    convertTimeRequest.date(),
-                    convertTimeRequest.hour(),
-                    convertTimeRequest.minute(),
-                    convertTimeRequest.second(),
+                    yearMonthDateRequest.year(),
+                    yearMonthDateRequest.month(),
+                    yearMonthDateRequest.date(),
+                    yearMonthDateRequest.hour(),
+                    yearMonthDateRequest.minute(),
+                    yearMonthDateRequest.second(),
                     0,
                     ZoneOffset.ofHours(9)
                 )
         );
-        return new ConvertedTimeResponse(convertedTime);
+        return new ConvertTimeResponse(convertedTime);
     }
 }
