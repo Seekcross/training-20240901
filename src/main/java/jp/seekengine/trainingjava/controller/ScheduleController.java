@@ -1,7 +1,9 @@
 package jp.seekengine.trainingjava.controller;
 
+import jp.seekengine.trainingjava.controller.request.GetDurationRequest;
 import jp.seekengine.trainingjava.controller.request.MessageRequest;
 import jp.seekengine.trainingjava.controller.request.SampleRequest;
+import jp.seekengine.trainingjava.controller.response.GetDurationResponse;
 import jp.seekengine.trainingjava.controller.response.SampleResponse;
 import jp.seekengine.trainingjava.domain.ScheduleService;
 import jp.seekengine.trainingjava.infrastructure.entity.MessageEntity;
@@ -39,5 +41,10 @@ public class ScheduleController {
     @GetMapping("/messages/search")
     public List<MessageEntity> sampleSearch(@RequestParam String message) {
         return scheduleService.searchMessage(message);
+    }
+
+    @GetMapping("/duration")
+    public GetDurationResponse getDuration(@RequestBody GetDurationRequest getDurationRequest) {
+        return scheduleService.calculateDuration(getDurationRequest);
     }
 }
