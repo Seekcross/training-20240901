@@ -1,10 +1,15 @@
 package jp.seekengine.trainingjava.domain;
 
+import jp.seekengine.trainingjava.controller.request.CalculateEndTimeRequest;
+import jp.seekengine.trainingjava.controller.request.CalculateEndTimeRequest.*;
 import jp.seekengine.trainingjava.infrastructure.SampleRepository;
 import jp.seekengine.trainingjava.infrastructure.entity.MessageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -35,4 +40,23 @@ public class ScheduleService {
         return sampleRepository.findByMessageContaining(message);
     }
 
+    public String calculateEndTime(CalculateEndTimeRequest request) {
+        LocalDateTime startTime = LocalDateTime.of(
+                request.startTime().year(),
+                request.startTime().month(),
+                request.startTime().date(),
+                request.startTime().hour(),
+                request.startTime().minute(),
+                request.startTime().second()
+        );
+
+        startTime = startTime
+                .plusHours(request.duration().hour())
+                .plusMinutes(request.duration().minute())
+                .plusSeconds(request.duration().second());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd'T'HH:mm:ssXXX");
+
+        return formatter.format(startTime.atOffset(ZoneOffset.ofHours(9)));
+    }
 }

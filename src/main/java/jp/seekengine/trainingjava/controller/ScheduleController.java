@@ -1,8 +1,10 @@
 package jp.seekengine.trainingjava.controller;
 
+import jp.seekengine.trainingjava.controller.request.CalculateEndTimeRequest;
 import jp.seekengine.trainingjava.controller.request.ConvertTimesRequest;
 import jp.seekengine.trainingjava.controller.request.MessageRequest;
 import jp.seekengine.trainingjava.controller.request.SampleRequest;
+import jp.seekengine.trainingjava.controller.response.CalculateEndTimeResponse;
 import jp.seekengine.trainingjava.controller.response.ConvertTimesResponse;
 import jp.seekengine.trainingjava.controller.request.YearMonthDateRequest;
 import jp.seekengine.trainingjava.controller.response.ConvertTimeResponse;
@@ -82,5 +84,10 @@ public class ScheduleController {
                 ).format(formatter)).toList();
 
         return new ConvertTimesResponse(convertedTime);
+    }
+
+    @GetMapping("times/calculate/end")
+    public CalculateEndTimeResponse calculateEndTime(@RequestBody CalculateEndTimeRequest calculateEndTimeRequest) {
+        return new CalculateEndTimeResponse(scheduleService.calculateEndTime(calculateEndTimeRequest));
     }
 }
