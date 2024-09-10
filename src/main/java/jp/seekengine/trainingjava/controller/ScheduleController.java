@@ -1,7 +1,9 @@
 package jp.seekengine.trainingjava.controller;
 
+import jp.seekengine.trainingjava.controller.request.ConvertTimesRequest;
 import jp.seekengine.trainingjava.controller.request.MessageRequest;
 import jp.seekengine.trainingjava.controller.request.SampleRequest;
+import jp.seekengine.trainingjava.controller.response.ConvertTimesResponse;
 import jp.seekengine.trainingjava.controller.request.YearMonthDateRequest;
 import jp.seekengine.trainingjava.controller.response.ConvertTimeResponse;
 import jp.seekengine.trainingjava.controller.response.SampleResponse;
@@ -51,16 +53,34 @@ public class ScheduleController {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
         String convertedTime = formatter.format(
                 OffsetDateTime.of(
-                    yearMonthDateRequest.year(),
-                    yearMonthDateRequest.month(),
-                    yearMonthDateRequest.date(),
-                    yearMonthDateRequest.hour(),
-                    yearMonthDateRequest.minute(),
-                    yearMonthDateRequest.second(),
-                    0,
-                    ZoneOffset.ofHours(9)
+                        yearMonthDateRequest.year(),
+                        yearMonthDateRequest.month(),
+                        yearMonthDateRequest.date(),
+                        yearMonthDateRequest.hour(),
+                        yearMonthDateRequest.minute(),
+                        yearMonthDateRequest.second(),
+                        0,
+                        ZoneOffset.ofHours(9)
                 )
         );
         return new ConvertTimeResponse(convertedTime);
+    }
+
+    @GetMapping("/times/convert")
+    public ConvertTimesResponse convertTimes(@RequestBody ConvertTimesRequest convertTimeRequest) {
+        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        List<String> convertedTime = convertTimeRequest.times().stream().map(it ->
+                OffsetDateTime.of(
+                        it.year(),
+                        it.month(),
+                        it.date(),
+                        it.hour(),
+                        it.minute(),
+                        it.second(),
+                        0,
+                        ZoneOffset.ofHours(9)
+                ).format(formatter)).toList();
+
+        return new ConvertTimesResponse(convertedTime);
     }
 }
