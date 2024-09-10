@@ -45,7 +45,7 @@ public class ScheduleController {
         return scheduleService.searchMessage(message);
     }
 
-    @GetMapping("/times/current/convert")
+    @GetMapping("/times/convert")
     public ConvertTimesResponse convertTimes(@RequestBody ConvertTimesRequest convertTimeRequest) {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
         List<String> convertedTime = convertTimeRequest.times().stream().map(it ->
