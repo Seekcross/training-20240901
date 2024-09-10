@@ -8,5 +8,7 @@ public record YearMonthDateRequest(
         Integer date,
         Integer hour,
         Integer minute,
-        Integer second
+        Integer second,
+        String requestTimeZoneId,
+        String responseTimeZoneId
 ) implements Serializable {}

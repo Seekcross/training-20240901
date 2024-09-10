@@ -13,6 +13,8 @@ public record ConvertTimesRequest(
             Integer date,
             Integer hour,
             Integer minute,
-            Integer second
+            Integer second,
+            String requestTimeZoneId,
+            String responseTimeZoneId
     ) {}
 }

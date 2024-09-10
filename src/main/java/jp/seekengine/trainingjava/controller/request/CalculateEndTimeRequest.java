@@ -12,7 +12,9 @@ public record CalculateEndTimeRequest(
             Integer date,
             Integer hour,
             Integer minute,
-            Integer second
+            Integer second,
+            String requestTimeZoneId,
+            String responseTimeZoneId
     ) {}
 
     public record Duration(

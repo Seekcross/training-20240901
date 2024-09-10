@@ -14,8 +14,8 @@ import jp.seekengine.trainingjava.infrastructure.entity.MessageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -53,8 +53,8 @@ public class ScheduleController {
     @GetMapping("/times/current/convert")
     public ConvertTimeResponse convertTime(@RequestBody YearMonthDateRequest yearMonthDateRequest) {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
-        String convertedTime = formatter.format(
-                OffsetDateTime.of(
+        ZonedDateTime requestTime =
+                ZonedDateTime.of(
                         yearMonthDateRequest.year(),
                         yearMonthDateRequest.month(),
                         yearMonthDateRequest.date(),
@@ -62,17 +62,19 @@ public class ScheduleController {
                         yearMonthDateRequest.minute(),
                         yearMonthDateRequest.second(),
                         0,
-                        ZoneOffset.ofHours(9)
-                )
-        );
-        return new ConvertTimeResponse(convertedTime);
+                        ZoneId.of(yearMonthDateRequest.requestTimeZoneId())
+                );
+        var responseTimeZoneId = ZoneId.of(yearMonthDateRequest.responseTimeZoneId());
+        var convertedTime = requestTime.withZoneSameInstant(responseTimeZoneId);
+
+        return new ConvertTimeResponse(formatter.format(convertedTime));
     }
 
     @GetMapping("/times/convert")
     public ConvertTimesResponse convertTimes(@RequestBody ConvertTimesRequest convertTimeRequest) {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
-        List<String> convertedTime = convertTimeRequest.times().stream().map(it ->
-                OffsetDateTime.of(
+        List<String> convertedTimes = convertTimeRequest.times().stream().map(it ->
+                ZonedDateTime.of(
                         it.year(),
                         it.month(),
                         it.date(),
@@ -80,10 +82,11 @@ public class ScheduleController {
                         it.minute(),
                         it.second(),
                         0,
-                        ZoneOffset.ofHours(9)
-                ).format(formatter)).toList();
+                        ZoneId.of(it.requestTimeZoneId())
+                ).withZoneSameInstant(ZoneId.of(it.responseTimeZoneId())).format(formatter)
+        ).toList();
 
-        return new ConvertTimesResponse(convertedTime);
+        return new ConvertTimesResponse(convertedTimes);
     }
 
     @GetMapping("times/calculate/end")
