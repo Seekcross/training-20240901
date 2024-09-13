@@ -1,6 +1,7 @@
 package jp.seekengine.trainingjava.domain;
 
 import jp.seekengine.trainingjava.controller.request.RegisterScheduleRequest;
+import jp.seekengine.trainingjava.controller.response.GetScheduleResponse;
 import jp.seekengine.trainingjava.infrastructure.SampleRepository;
 import jp.seekengine.trainingjava.infrastructure.ScheduleRepository;
 import jp.seekengine.trainingjava.infrastructure.entity.MessageEntity;
@@ -8,6 +9,9 @@ import jp.seekengine.trainingjava.infrastructure.entity.ScheduleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.module.FindException;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -51,4 +55,23 @@ public class ScheduleService {
         return scheduleRepository.save(entity);
     }
 
+    public GetScheduleResponse getSchedule(Integer id) {
+        if (id == null) throw new IllegalArgumentException("ID must not be null");
+
+        ScheduleEntity schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new FindException("ScheduleId: " + id + " not found"));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        ZoneOffset offset = ZoneOffset.ofHours(9);
+
+        String fromTime = schedule.getFromDatetime().atOffset(offset).format(formatter);
+        String toTime = schedule.getToDatetime().atOffset(offset).format(formatter);
+
+        return new GetScheduleResponse(
+                schedule.getId(),
+                schedule.getScheduleTitle(),
+                fromTime,
+                toTime
+        );
+    }
 }
