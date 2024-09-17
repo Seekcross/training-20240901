@@ -2,12 +2,17 @@ package jp.seekengine.trainingjava.controller;
 
 import jp.seekengine.trainingjava.controller.request.MessageRequest;
 import jp.seekengine.trainingjava.controller.request.SampleRequest;
+import jp.seekengine.trainingjava.controller.request.YearMonthDateRequest;
+import jp.seekengine.trainingjava.controller.response.ConvertTimeResponse;
 import jp.seekengine.trainingjava.controller.response.SampleResponse;
 import jp.seekengine.trainingjava.domain.ScheduleService;
 import jp.seekengine.trainingjava.infrastructure.entity.MessageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -39,5 +44,23 @@ public class ScheduleController {
     @GetMapping("/messages/search")
     public List<MessageEntity> sampleSearch(@RequestParam String message) {
         return scheduleService.searchMessage(message);
+    }
+
+    @GetMapping("/times/current/convert")
+    public ConvertTimeResponse convertTime(@RequestBody YearMonthDateRequest yearMonthDateRequest) {
+        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        String convertedTime = formatter.format(
+                OffsetDateTime.of(
+                    yearMonthDateRequest.year(),
+                    yearMonthDateRequest.month(),
+                    yearMonthDateRequest.date(),
+                    yearMonthDateRequest.hour(),
+                    yearMonthDateRequest.minute(),
+                    yearMonthDateRequest.second(),
+                    0,
+                    ZoneOffset.ofHours(9)
+                )
+        );
+        return new ConvertTimeResponse(convertedTime);
     }
 }
